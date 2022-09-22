@@ -13,6 +13,8 @@ public class EmbeddedResourceTests
     [Theory]
     [InlineData("NoNamespace")]
     [InlineData("SimpleNamespace")]
+    [InlineData("FileScopedNamespace")]
+    [InlineData("DifferentNamespaces")]
     public async Task Test(string name)
     {
         (var sources, var generatedSources) = await LoadAsync(name);

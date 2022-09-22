@@ -16,19 +16,27 @@ namespace ServiceConstruct
     {
         public void Execute(GeneratorExecutionContext context)
         {
-            var finder = (ServiceConstructFinder)context.SyntaxReceiver;
+            var finder = (ServiceConstructFinder)context.SyntaxReceiver!;
             foreach ((var classDeclaration, var parameterList) in finder.ServiceConstructItems)
             {
-                var namespaceName = GetNamespace(classDeclaration);
+                var semanticModel = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
+                var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+
+                if (classSymbol is null)
+                {
+                    return;
+                }
+
+                var namespaceName = classSymbol.ContainingNamespace.Name;
                 var className = classDeclaration.Identifier.ToString();
 
                 var sourceText = new StringBuilder();
-                if (namespaceName != null)
+                if (!string.IsNullOrEmpty(namespaceName))
                 {
                     sourceText.Append($"namespace {namespaceName} {{");
                 }
                 sourceText.Append($"public partial class {className} {{");
-                sourceText.Append($"public static {className} ServiceConstruct(System.IServiceProvider serviceProvider) {{");
+                sourceText.Append($"public static {className} ServiceConstruct(global::System.IServiceProvider serviceProvider) {{");
                 sourceText.Append($"return new {className}(");
                 bool hasAddedParameter = false;
                 foreach (var parameter in parameterList.Parameters)
@@ -37,32 +45,23 @@ namespace ServiceConstruct
                     {
                         sourceText.Append(", ");
                     }
-                    var typeName = parameter.Type.ToString();
+                    var parameterSymbol = semanticModel.GetDeclaredSymbol(parameter);
+                    var typeName = parameterSymbol.Type.ToMinimalDisplayString(semanticModel, 0);
                     sourceText.Append($"({typeName})serviceProvider.GetService(typeof({typeName}))");
                     hasAddedParameter = true;
                 }
                 sourceText.Append($");");
                 sourceText.Append("}");
                 sourceText.Append("}");
-                if (namespaceName != null)
+                if (!string.IsNullOrEmpty(namespaceName))
                 {
                     sourceText.Append("}");
                 }
 
-                    var source = CSharpSyntaxTree.ParseText(SourceText.From(sourceText.ToString(), Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
+                var source = CSharpSyntaxTree.ParseText(SourceText.From(sourceText.ToString(), Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
 
                 context.AddSource($"{className}.g.cs", source);
             }
-        }
-
-        private string? GetNamespace(ClassDeclarationSyntax classDeclaration)
-        {
-            var namespaceDeclaration = classDeclaration.FirstAncestorOrSelf<NamespaceDeclarationSyntax>();
-            if (namespaceDeclaration != null)
-            {
-                return namespaceDeclaration.Name.ToString();
-            }
-            return null;
         }
 
         public void Initialize(GeneratorInitializationContext context)
