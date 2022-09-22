@@ -5,10 +5,10 @@ namespace ServiceConstruct.Tests;
 
 using VerifyCS = CSharpSourceGeneratorVerifier<ServiceConstruct.Generator>;
 
-public class UnitTest1
+public class SanityTest
 {
     [Fact]
-    public async Task SanityTest()
+    public async Task Test()
     {
         var code = "";
         var test = new VerifyCS.Test
