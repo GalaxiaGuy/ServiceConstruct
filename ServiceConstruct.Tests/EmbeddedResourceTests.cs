@@ -15,6 +15,7 @@ public class EmbeddedResourceTests
     [InlineData("SimpleNamespace")]
     [InlineData("FileScopedNamespace")]
     [InlineData("DifferentNamespaces")]
+    [InlineData("MultipleServices")]
     public async Task Test(string name)
     {
         (var sources, var generatedSources) = await LoadAsync(name);

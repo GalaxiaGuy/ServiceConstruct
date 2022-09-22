@@ -1,5 +1,7 @@
 ﻿using ServiceConstruct;
 
+namespace Sample;
+
 public partial class MessageService : IMessageService
 {
     private readonly IHelloService _helloService;

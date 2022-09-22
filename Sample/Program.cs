@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Sample;
 
 var serviceCollection = new ServiceCollection();
 serviceCollection.AddSingleton<IHelloService, HelloService>();

@@ -1,4 +1,6 @@
-﻿public interface IHelloService
+﻿namespace Sample;
+
+public interface IHelloService
 {
     string HelloWorld();
 }

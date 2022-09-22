@@ -1,4 +1,6 @@
-﻿public interface IMessageService
+﻿namespace Sample;
+
+public interface IMessageService
 {
     string Message();
 }
