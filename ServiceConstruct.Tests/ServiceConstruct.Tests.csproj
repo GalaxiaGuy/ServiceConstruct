@@ -29,34 +29,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ServiceConstruct\ServiceConstruct.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Remove="Microsoft.CodeAnalysis.CSharp" />
-    <None Remove="Microsoft.CodeAnalysis.Analyzers" />
-    <None Remove="Microsoft.CodeAnalysis.Testing.Verifiers.XUnit" />
-    <None Remove="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" />
-    <None Remove="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" />
-    <None Remove="Microsoft.CodeAnalysis.Common" />
-    <None Remove="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
-    <None Remove="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
-    <None Remove="Test1\" />
-    <None Remove="Test1\Sources\" />
-    <None Remove="Test1\GeneratedSources\" />
+    <Compile Remove="TestCases\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Test1\" />
-    <Folder Include="Test1\Sources\" />
-    <Folder Include="Test1\GeneratedSources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Test1\Sources\HelloService.cs" />
-    <Compile Remove="Test1\Sources\MessageService.cs" />
-    <Compile Remove="Test1\Sources\ServiceConstructAttribute.cs" />
-    <Compile Remove="Test1\GeneratedSources\MessageService.g.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Test1\Sources\HelloService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
-    <EmbeddedResource Include="Test1\Sources\MessageService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
-    <EmbeddedResource Include="Test1\Sources\ServiceConstructAttribute.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
-    <EmbeddedResource Include="Test1\GeneratedSources\MessageService.g.cs" />
+    <EmbeddedResource Include="TestCases\**\*.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
   </ItemGroup>
 </Project>
