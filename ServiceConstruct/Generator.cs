@@ -19,31 +19,50 @@ namespace ServiceConstruct
             var finder = (ServiceConstructFinder)context.SyntaxReceiver;
             foreach ((var classDeclaration, var parameterList) in finder.ServiceConstructItems)
             {
+                var namespaceName = GetNamespace(classDeclaration);
                 var className = classDeclaration.Identifier.ToString();
 
-                var addedClass = new StringBuilder();
-                addedClass.Append($"public partial class {className} {{");
-                addedClass.Append($"public static {className} ServiceConstruct(System.IServiceProvider serviceProvider) {{");
-                addedClass.Append($"return new {className}(");
+                var sourceText = new StringBuilder();
+                if (namespaceName != null)
+                {
+                    sourceText.Append($"namespace {namespaceName} {{");
+                }
+                sourceText.Append($"public partial class {className} {{");
+                sourceText.Append($"public static {className} ServiceConstruct(System.IServiceProvider serviceProvider) {{");
+                sourceText.Append($"return new {className}(");
                 bool hasAddedParameter = false;
                 foreach (var parameter in parameterList.Parameters)
                 {
                     if (hasAddedParameter)
                     {
-                        addedClass.Append(", ");
+                        sourceText.Append(", ");
                     }
                     var typeName = parameter.Type.ToString();
-                    addedClass.Append($"({typeName})serviceProvider.GetService(typeof({typeName}))");
+                    sourceText.Append($"({typeName})serviceProvider.GetService(typeof({typeName}))");
                     hasAddedParameter = true;
                 }
-                addedClass.Append($");");
-                addedClass.Append("}");
-                addedClass.Append("}");
+                sourceText.Append($");");
+                sourceText.Append("}");
+                sourceText.Append("}");
+                if (namespaceName != null)
+                {
+                    sourceText.Append("}");
+                }
 
-                var source = CSharpSyntaxTree.ParseText(SourceText.From(addedClass.ToString(), Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
+                    var source = CSharpSyntaxTree.ParseText(SourceText.From(sourceText.ToString(), Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
 
                 context.AddSource($"{className}.g.cs", source);
             }
+        }
+
+        private string? GetNamespace(ClassDeclarationSyntax classDeclaration)
+        {
+            var namespaceDeclaration = classDeclaration.FirstAncestorOrSelf<NamespaceDeclarationSyntax>();
+            if (namespaceDeclaration != null)
+            {
+                return namespaceDeclaration.Name.ToString();
+            }
+            return null;
         }
 
         public void Initialize(GeneratorInitializationContext context)

@@ -1,7 +1,10 @@
-﻿public partial class MessageService
+﻿namespace Test
 {
-    public static MessageService ServiceConstruct(System.IServiceProvider serviceProvider)
+    public partial class MessageService
     {
-        return new MessageService((HelloService)serviceProvider.GetService(typeof(HelloService)));
+        public static MessageService ServiceConstruct(System.IServiceProvider serviceProvider)
+        {
+            return new MessageService((HelloService)serviceProvider.GetService(typeof(HelloService)));
+        }
     }
 }
