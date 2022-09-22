@@ -1,6 +1,6 @@
 ﻿using ServiceConstruct;
 
-public class MessageService : IMessageService
+public partial class MessageService : IMessageService
 {
     private readonly IHelloService _helloService;
 

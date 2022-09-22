@@ -1,4 +1,4 @@
-﻿public class MessageService
+﻿public partial class MessageService
 {
     private readonly HelloService _helloService;
 

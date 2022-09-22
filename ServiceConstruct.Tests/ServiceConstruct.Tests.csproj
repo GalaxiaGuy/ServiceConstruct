@@ -51,10 +51,12 @@
     <Compile Remove="Test1\Sources\HelloService.cs" />
     <Compile Remove="Test1\Sources\MessageService.cs" />
     <Compile Remove="Test1\Sources\ServiceConstructAttribute.cs" />
+    <Compile Remove="Test1\GeneratedSources\MessageService.g.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Test1\Sources\HelloService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
     <EmbeddedResource Include="Test1\Sources\MessageService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
     <EmbeddedResource Include="Test1\Sources\ServiceConstructAttribute.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <EmbeddedResource Include="Test1\GeneratedSources\MessageService.g.cs" />
   </ItemGroup>
 </Project>
