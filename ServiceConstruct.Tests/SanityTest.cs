@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Text;
 using System.Text;
 namespace ServiceConstruct.Tests;
 
-using VerifyCS = CSharpSourceGeneratorVerifier<ServiceConstruct.Generator>;
+using VerifyCS = CSharpSourceGeneratorVerifier<GamesWithGravitas.ServiceConstruct.Generator>;
 
 public class SanityTest
 {

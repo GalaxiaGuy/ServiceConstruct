@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ServiceConstruct
+namespace GamesWithGravitas.ServiceConstruct
 {
     public class ServiceConstructAttribute : Attribute
     {

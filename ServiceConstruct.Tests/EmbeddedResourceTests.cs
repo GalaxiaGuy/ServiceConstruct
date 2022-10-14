@@ -1,15 +1,23 @@
 ﻿namespace ServiceConstruct.Tests;
 
+using GamesWithGravitas.ServiceConstruct;
 using Microsoft;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
+using System.Reflection;
 using System.Text;
-using VerifyCS = CSharpSourceGeneratorVerifier<ServiceConstruct.Generator>;
+using VerifyCS = CSharpSourceGeneratorVerifier<GamesWithGravitas.ServiceConstruct.Generator>;
 
 public class EmbeddedResourceTests
 {
+    private static readonly Assembly TestAssembly = typeof(EmbeddedResourceTests).Assembly;
+
+    private static readonly Assembly ServiceConstructAssembly = typeof(ServiceConstructAttribute).Assembly;
+
+    private static readonly MetadataReference ServiceConstructAssemblyMetatdataReference = MetadataReference.CreateFromFile(ServiceConstructAssembly.Location);
+
     [Theory]
     [InlineData("NoNamespace")]
     [InlineData("SimpleNamespace")]
@@ -24,6 +32,7 @@ public class EmbeddedResourceTests
         Assert.True(generatedSources.Any());
 
         var test = new VerifyCS.Test();
+        test.TestState.AdditionalReferences.Add(ServiceConstructAssemblyMetatdataReference);
         test.TestState.Sources.AddRange(sources);
         test.TestState.GeneratedSources.AddRange(generatedSources);
         await test.RunAsync();
@@ -31,17 +40,17 @@ public class EmbeddedResourceTests
 
     private async Task<(SourceFileList Sources, SourceFileCollection GeneratedSources)> LoadAsync(string name)
     {
-        var sourcesPrefix = $"ServiceConstruct.Tests.TestCases.{name}.Sources.";
-        var generatedSourcesPrefix = $"ServiceConstruct.Tests.TestCases.{name}.GeneratedSources.";
-        var expectedGeneratedSourcePrefix = "ServiceConstruct/ServiceConstruct.Generator/";
-        var assembly = typeof(BaseTest).Assembly;
-        var resources = assembly.GetManifestResourceNames();
+        var sourcesPrefix = $"{TestAssembly.GetName().Name}.TestCases.{name}.Sources.";
+        var generatedSourcesPrefix = $"{TestAssembly.GetName().Name}.TestCases.{name}.GeneratedSources.";
+        var expectedGeneratedSourcePrefix = $"{ServiceConstructAssembly.GetName().Name}/GamesWithGravitas.ServiceConstruct.Generator/";
+ 
+        var resources = TestAssembly.GetManifestResourceNames();
 
         var sources = new SourceFileList("", "");
         var sourceResourceNames = resources.Where(x => x.StartsWith(sourcesPrefix));
         foreach (var resourceName in sourceResourceNames)
         {
-            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = TestAssembly.GetManifestResourceStream(resourceName);
             using var streamReader = new StreamReader(stream!);
             var content = await streamReader.ReadToEndAsync();
             var source = CSharpSyntaxTree.ParseText(SourceText.From(content, Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
@@ -52,7 +61,7 @@ public class EmbeddedResourceTests
         var generatedSourceResourceNames = resources.Where(x => x.StartsWith(generatedSourcesPrefix));
         foreach (var resourceName in generatedSourceResourceNames)
         {
-            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = TestAssembly.GetManifestResourceStream(resourceName);
             using var streamReader = new StreamReader(stream!);
             var content = await streamReader.ReadToEndAsync();
             var source = CSharpSyntaxTree.ParseText(SourceText.From(content, Encoding.UTF8)).GetRoot().NormalizeWhitespace().SyntaxTree.GetText();
