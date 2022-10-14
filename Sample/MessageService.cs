@@ -1,4 +1,4 @@
-﻿using ServiceConstruct;
+﻿using GamesWithGravitas.ServiceConstruct;
 
 namespace Sample;
 
