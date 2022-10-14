@@ -1,8 +1,10 @@
-﻿public partial class MessageService
+﻿using GamesWithGravitas.ServiceConstruct;
+
+public partial class MessageService
 {
     private readonly HelloService _helloService;
 
-    [ServiceConstruct.ServiceConstruct]
+    [ServiceConstruct]
     public MessageService(HelloService helloService)
     {
         _helloService = helloService;

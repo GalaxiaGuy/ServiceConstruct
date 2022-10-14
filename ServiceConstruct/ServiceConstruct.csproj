@@ -5,6 +5,7 @@
     <IsRoslynComponent>true</IsRoslynComponent>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <AssemblyName>GamesWithGravitas.ServiceConstruct</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

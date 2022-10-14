@@ -1,4 +1,6 @@
-﻿using Hello;
+﻿using GamesWithGravitas.ServiceConstruct;
+
+using Hello;
 
 namespace Message
 {
@@ -6,7 +8,7 @@ namespace Message
     {
         private readonly HelloService _helloService;
 
-        [ServiceConstruct.ServiceConstruct]
+        [ServiceConstruct]
         public MessageService(HelloService helloService)
         {
             _helloService = helloService;
